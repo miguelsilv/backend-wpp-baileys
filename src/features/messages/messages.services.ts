@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { Contact } from "@prisma/client";
-import { ReplyMessageDto, SendMessageDto } from "src/common/dtos/message.dto";
+import { Author, Contact, Message } from "@prisma/client";
+import { SendMessageDto } from "src/common/dtos/message.dto";
 import { PrismaService } from "src/prisma.service";
 
 @Injectable()
@@ -8,7 +8,7 @@ export class MessagesService {
 
     constructor(private readonly prisma: PrismaService) { }
 
-    async sendMessage(data: SendMessageDto): Promise<void> {
+    public async sendMessage(author: Author, data: SendMessageDto): Promise<void> {
         const { name, phone, message } = data;
 
         let contact = await this.getContact(phone);
@@ -19,12 +19,31 @@ export class MessagesService {
             await this.updateContactName(contact.id, name);
         }
 
-        await this.createMessage(message, contact.id);
+        await this.createMessage(message, contact.id, author);
     }
 
-    private async createMessage(content: string, contactId: string): Promise<void> {
+    public async listUnreadMessagesOfContact(phone: string): Promise<Omit<Message, 'contactId' | 'read'>[]> {
+        const contact = await this.getContact(phone);
+
+        if (!contact) {
+            throw new Error('Esse contato não existe');
+        }
+
+        return this.prisma.message.findMany({
+            where: { read: false, contactId: contact.id },
+            include: {
+                contact: true,
+            },
+            omit: {
+                contactId: true,
+                read: true,
+            },
+        });
+    }
+
+    private async createMessage(content: string, contactId: string, author: Author): Promise<void> {
         await this.prisma.message.create({
-            data: { content, contactId },
+            data: { content, contactId, author, read: author === Author.BOT },
         });
     }
 
