@@ -16,7 +16,7 @@ datasource db {
 model Contact {
   id String @id @default(uuid())
   name String
-  phone String
+  phone String @unique
   messages Message[]
 }
 
@@ -24,7 +24,7 @@ model Message {
   id String @id @default(uuid())
   content String
   contactId String
-  author Author
+  author Author @default(BOT)
   read Boolean @default(false)
   createdAt DateTime @default(now())
   contact Contact @relation(fields: [contactId], references: [id])
