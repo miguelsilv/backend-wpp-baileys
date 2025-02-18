@@ -2,11 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { Author, Contact, Message } from "@prisma/client";
 import { SendMessageDto } from "src/common/dtos/message.dto";
 import { PrismaService } from "src/prisma.service";
+import { WhatsappAdapter } from "./whatsapp.adapter";
 
 @Injectable()
 export class MessagesService {
 
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService, private readonly whatsapp: WhatsappAdapter) { }
 
     public async sendMessage(author: Author, data: SendMessageDto): Promise<void> {
         const { name, phone, message } = data;
@@ -20,6 +21,10 @@ export class MessagesService {
         }
 
         await this.createMessage(message, contact.id, author);
+        
+        if (author === Author.BOT) {
+            await this.whatsapp.sendMessage(phone, message);
+        }
     }
 
     public async listUnreadMessagesOfContact(phone: string): Promise<Omit<Message, 'contactId' | 'read'>[]> {
