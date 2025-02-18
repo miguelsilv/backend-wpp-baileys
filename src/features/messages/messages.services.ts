@@ -21,6 +21,11 @@ export class MessagesService {
                     phone,
                 },
             });
+        } else if (name && contact.name !== name) {
+            await this.prisma.contact.update({
+                where: { id: contact.id },
+                data: { name },
+            });
         }
 
         await this.prisma.message.create({
