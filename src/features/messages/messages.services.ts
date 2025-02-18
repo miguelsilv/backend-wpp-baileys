@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { SendMessageDto } from "src/common/dtos/message.dto";
+import { Contact } from "@prisma/client";
+import { ReplyMessageDto, SendMessageDto } from "src/common/dtos/message.dto";
 import { PrismaService } from "src/prisma.service";
 
 @Injectable()
@@ -10,29 +11,39 @@ export class MessagesService {
     async sendMessage(data: SendMessageDto): Promise<void> {
         const { name, phone, message } = data;
 
-        let contact = await this.prisma.contact.findUnique({
-            where: { phone },
-        });
+        let contact = await this.getContact(phone);
 
         if (!contact) {
-            contact = await this.prisma.contact.create({
-                data: {
-                    name: name ?? phone,
-                    phone,
-                },
-            });
+            contact = await this.createContact(name ?? phone, phone);
         } else if (name && contact.name !== name) {
-            await this.prisma.contact.update({
-                where: { id: contact.id },
-                data: { name },
-            });
+            await this.updateContactName(contact.id, name);
         }
 
+        await this.createMessage(message, contact.id);
+    }
+
+    private async createMessage(content: string, contactId: string): Promise<void> {
         await this.prisma.message.create({
-            data: {
-                content: message,
-                contactId: contact.id
-            },
+            data: { content, contactId },
+        });
+    }
+
+    private async createContact(name: string, phone: string): Promise<Contact> {
+        return this.prisma.contact.create({
+            data: { phone, name },
+        });
+    }
+
+    private async updateContactName(contactId: string, name: string): Promise<void> {
+        await this.prisma.contact.update({
+            where: { id: contactId },
+            data: { name },
+        });
+    }
+
+    private async getContact(phone: string): Promise<Contact | null> {
+        return this.prisma.contact.findUnique({
+            where: { phone },
         });
     }
 }
