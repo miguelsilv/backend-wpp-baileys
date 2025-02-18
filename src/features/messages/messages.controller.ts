@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from "@nestjs/common";
 
-@Controller('message')
-export class MessageController {
+@Controller('messages')
+export class MessagesController {
 
     @Post()
     async sendMessage(@Body() body: any) {
