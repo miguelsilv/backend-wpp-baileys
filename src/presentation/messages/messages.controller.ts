@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { SendMessageUseCase } from '../../application/use-cases/send-message.use-case';
-import { SendMessageDto } from 'src/common/dtos/message.dto';
+import { SendMessageUseCase } from '../../application/use-cases/send-message/send-message.use-case';
+import { SendMessageDto } from '../../common/dtos/message.dto';
   
 @Controller('messages')
 export class MessagesController {

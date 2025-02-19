@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from '../../domain/entities/message.entity';
-import { MessageRepository } from '../../domain/repositories/message-repository.abstract';
-import { WhatsAppProvider } from 'src/common/providers/whatsapp/whatsapp.provider';
-import { IUseCase } from 'src/common/base/usecase.base';
+import { WhatsAppProvider } from '../../../common/providers/whatsapp/whatsapp.provider';
+import { IUseCase } from '../../../common/base/usecase.base';
+import { MessageRepository } from '../../../domain/repositories/message-repository.abstract';
+import { Message } from '../../../domain/entities/message.entity';
 
 interface SendMessageInput {
   content: string;
