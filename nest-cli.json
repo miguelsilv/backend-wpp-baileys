@@ -1,8 +1,32 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/jet-test-senior/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/jet-test-senior/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/jet-test-senior",
+  "projects": {
+    "jet-test-senior": {
+      "type": "application",
+      "root": "apps/jet-test-senior",
+      "entryFile": "main",
+      "sourceRoot": "apps/jet-test-senior/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/jet-test-senior/tsconfig.app.json"
+      }
+    },
+    "message-consumer": {
+      "type": "application",
+      "root": "apps/message-consumer",
+      "entryFile": "main",
+      "sourceRoot": "apps/message-consumer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/message-consumer/tsconfig.app.json"
+      }
+    }
   }
 }

@@ -7,6 +7,11 @@ services:
       POSTGRES_DB: jetdb
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   rabbitmq:
     image: rabbitmq:3-management
     environment:
@@ -15,6 +20,11 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   redis:
     image: redis:latest
     environment:
@@ -22,5 +32,36 @@ services:
     ports:
       - 6379:6379
 
+  message-consumer:
+    image: message-consumer
+    build:
+      context: .
+      dockerfile: apps/message-consumer/Dockerfile
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  message-producer:
+    image: message-producer
+    build:
+      context: .
+      dockerfile: apps/jet-test-senior/Dockerfile
+    environment:
+      REDIS_HOST: redis
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      PG_DATABASE_URL: postgres://postgres:postgres@postgres:5432/jetdb
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      redis:
+        condition: service_started
 volumes:
   postgres_data:
