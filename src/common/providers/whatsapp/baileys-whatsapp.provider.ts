@@ -1,14 +1,16 @@
-import { WhatsappAdapter } from "./whatsapp.adapter";
-import makeWASocket, { Browsers, DisconnectReason, WASocket, useMultiFileAuthState } from 'baileys';
-import { Injectable } from '@nestjs/common';
+import { Message } from "src/domain/entities/message.entity";
+import { WhatsAppProvider } from "./whatsapp.provider";
+import { useMultiFileAuthState, WASocket } from "baileys";
+import { makeWASocket } from "baileys";
+import { DisconnectReason } from "baileys";
+import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class BaileysWhatsappAdapter extends WhatsappAdapter {
+export class BaileysWhatsappProvider implements WhatsAppProvider {
 
     private socket: WASocket;
 
     constructor() {
-        super();
         this.connect();
     }
 
@@ -31,14 +33,15 @@ export class BaileysWhatsappAdapter extends WhatsappAdapter {
         })
     }
 
-    public async sendMessage(phone: string, message: string): Promise<void> {
-        const phoneNumber = `${phone}@s.whatsapp.net`;
+    public async sendMessage(message: Message): Promise<void> {
+        const content = message.getContent();
 
         try {
-            await this.socket.sendMessage(phoneNumber, { text: message });
-            console.log(`Mensagem enviada para ${phone}: ${message}`);
+            await this.socket.sendMessage(message.getPhoneFormatedFromWhatsapp(), { text: content });
+            console.log(`Mensagem enviada para ${message.getPhone()}: ${content}`);
         } catch (error) {
             console.error('Erro ao enviar mensagem:', error);
         }
     }
 }
+

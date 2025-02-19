@@ -6,14 +6,7 @@ import { IsString } from "class-validator";
 class MessageDto {
     @IsString()
     @IsNotEmpty()
-    @Transform(({ value }) => {
-        let phone = value.replace(/[^\d]/g, '');
-        if (phone.length === 13 && phone.startsWith('55')) {
-            phone = phone.slice(0, -1);
-        }
-        return phone;
-    })
-    @Matches(/^\d{12}$/, {
+    @Matches(/^\d{13}$/, {
         message: 'O número de telefone deve ser válido no padrão 5511999999999.',
     })
     phone: string;

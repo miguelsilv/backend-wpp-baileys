@@ -1,6 +1,3 @@
--- CreateEnum
-CREATE TYPE "Author" AS ENUM ('USER', 'BOT');
-
 -- CreateTable
 CREATE TABLE "Contact" (
     "id" TEXT NOT NULL,
@@ -15,8 +12,7 @@ CREATE TABLE "Message" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "contactId" TEXT NOT NULL,
-    "author" "Author" NOT NULL DEFAULT 'BOT',
-    "read" BOOLEAN NOT NULL DEFAULT false,
+    "sent" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")

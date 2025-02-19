@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MessagesModule } from './features/messages';
+import { MessagesModule } from './presentation/messages';
 
 @Module({
   imports: [MessagesModule],
