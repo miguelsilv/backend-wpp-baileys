@@ -6,17 +6,15 @@ import { BaileysWhatsappProvider } from "../../common/providers/whatsapp/baileys
 import { WhatsAppProvider } from "../../common/providers/whatsapp/whatsapp.provider";
 import { MessageRepository } from "../../domain/repositories/message-repository.abstract";
 import { PGMessageRepository } from "../../application/repositories/message.repository";
+import { QueuesModule } from "src/infra/queues";
 
 
 @Module({
+    imports: [QueuesModule],
     controllers: [MessagesController],
     providers: [
         PrismaService,
         SendMessageUseCase,
-        {
-            provide: WhatsAppProvider,
-            useClass: BaileysWhatsappProvider
-        },
         {
             provide: MessageRepository,
             useClass: PGMessageRepository,

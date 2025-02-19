@@ -3,6 +3,7 @@ import { WhatsAppProvider } from '../../../common/providers/whatsapp/whatsapp.pr
 import { IUseCase } from '../../../common/base/usecase.base';
 import { MessageRepository } from '../../../domain/repositories/message-repository.abstract';
 import { Message } from '../../../domain/entities/message.entity';
+import { MessageProducer } from 'src/infra/queues/producers/message.producer';
 
 interface SendMessageInput {
   content: string;
@@ -14,7 +15,7 @@ interface SendMessageInput {
 export class SendMessageUseCase implements IUseCase<void> {
   constructor(
     private readonly messageRepository: MessageRepository,
-    private readonly whatsAppService: WhatsAppProvider,
+    private readonly messageProducer: MessageProducer,
   ) { }
 
   public async execute(input: SendMessageInput): Promise<void> {
@@ -24,8 +25,7 @@ export class SendMessageUseCase implements IUseCase<void> {
       author: input.author,
     });
 
-    await this.whatsAppService.sendMessage(message);
-
     await this.messageRepository.save(message);
+    await this.messageProducer.addMessageToQueue(message);
   }
 } 
