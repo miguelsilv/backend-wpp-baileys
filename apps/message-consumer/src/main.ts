@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Transport } from '@nestjs/microservices';
 import { MicroserviceOptions } from '@nestjs/microservices';
+import rabbitMQConfig from './infra/config/rabbitmq.config';
 
 async function bootstrap() {
   console.log('RABBITMQ_URL', process.env.RABBITMQ_URL);
@@ -12,17 +13,7 @@ async function bootstrap() {
 
   while (currentRetry < maxRetries) {
     try {
-      const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-        transport: Transport.RMQ,
-        options: {
-          urls: [process.env.RABBITMQ_URL || 'amqp://localhost:5672'],
-          queue: 'message_queue',
-          noAck: false,
-          queueOptions: {
-            durable: true
-          },
-        },
-      });
+      const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, rabbitMQConfig());
 
       await app.listen();
       console.log('Sucesso ao conectar no RabbitMQ');

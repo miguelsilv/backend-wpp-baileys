@@ -14,7 +14,6 @@ export class BaileysWhatsappProvider implements WhatsAppProvider {
         this.connect();
     }
 
-
     private async connect() {
         const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
         this.socket = makeWASocket({
@@ -44,7 +43,6 @@ export class BaileysWhatsappProvider implements WhatsAppProvider {
 
         await this.socket.sendMessage(message.getPhoneFormatedFromWhatsapp(), { text: content });
         console.log(`Mensagem enviada para ${message.getPhone()}: ${content}`);
-
     }
 
     isConnected(): boolean {
