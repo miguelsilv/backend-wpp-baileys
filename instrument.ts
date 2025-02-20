@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nestjs"
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: "https://8901fc6e3eaec91c081db6233d292986@o4508849733435392.ingest.us.sentry.io/4508849734746112",
   integrations: [
     nodeProfilingIntegration(),
   ],

@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "nest build && npm run sentry:sourcemaps",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start message-producer",
     "start:dev": "nest start message-producer --watch",
@@ -21,7 +21,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/message-producer/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/message-producer/test/jest-e2e.json",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org carambole --project node-nestjs ./out && sentry-cli sourcemaps upload --org carambole --project node-nestjs ./out"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.2",
@@ -31,6 +32,7 @@
     "@nestjs/microservices": "^11.0.10",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.3.1",
+    "@sentry/cli": "^2.42.1",
     "@sentry/nestjs": "^9.1.0",
     "@sentry/profiling-node": "^9.1.0",
     "amqp-connection-manager": "^4.1.14",
