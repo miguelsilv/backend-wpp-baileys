@@ -1,6 +1,6 @@
+import "./instrument";
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Transport } from '@nestjs/microservices';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import rabbitMQConfig from './infra/config/rabbitmq.config';
 import { Logger } from 'nestjs-pino';
