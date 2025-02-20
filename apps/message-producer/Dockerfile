@@ -12,7 +12,7 @@ RUN npm ci
 RUN npx prisma generate
 
 # Build da aplicação
-RUN npm run build jet-test-senior
+RUN npm run build message-producer
 
 # Imagem de produção
 FROM node:20-alpine
@@ -31,7 +31,7 @@ RUN npm ci --only=production
 RUN npx prisma generate
 
 # Copiar build da aplicação
-COPY --from=builder /app/dist/apps/jet-test-senior ./dist
+COPY --from=builder /app/dist/apps/message-producer ./dist
 
 # Definir variáveis de ambiente
 ENV PORT=3000

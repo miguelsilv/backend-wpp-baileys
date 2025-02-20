@@ -49,7 +49,7 @@ services:
     image: message-producer
     build:
       context: .
-      dockerfile: apps/jet-test-senior/Dockerfile
+      dockerfile: apps/message-producer/Dockerfile
     environment:
       REDIS_HOST: redis
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672

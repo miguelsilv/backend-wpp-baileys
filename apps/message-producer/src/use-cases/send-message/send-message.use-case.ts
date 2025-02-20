@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IUseCase } from '../../base/usecase.base';
 import { MessageRepository } from '@/core/domain/repositories/message-repository.abstract';
 import { Message } from '@/core/domain/entities/message.entity';
-import { MessageProducer } from 'apps/jet-test-senior/src/queues/producers/message.producer';
+import { MessageProducer } from 'apps/message-producer/src/queues/producers/message.producer';
 
 interface SendMessageInput {
   content: string;
